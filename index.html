@@ -90,11 +90,11 @@
 <body>
 
     <div id="start-overlay" onclick="startExperience()">
-        <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
+        <p class="overlay-text">Tap anywhere to start... 💖</p>
     </div>
 
-    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3" preload="auto"></audio>
-    <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3" preload="auto"></audio>
+    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3" preload="none"></audio>
+    <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3" preload="none"></audio>
 
     <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
 
@@ -161,28 +161,39 @@
         const messageContainer = document.getElementById('message-container');
         const buttonsContainer = document.getElementById('buttons-container');
         const overlay = document.getElementById('start-overlay');
-        const typingAudio = document.getElementById('typingSound'); // Now referencing the HTML element
-        const cheerAudio = document.getElementById('cheerSound'); // Now referencing the HTML element
+        const typingAudio = document.getElementById('typingSound'); 
+        const cheerAudio = document.getElementById('cheerSound'); 
         
         let index = 0;
         let animationStarted = false;
+        let soundIsActive = false; // Flag to track if sound was successfully unlocked
 
         function playTypingSound() {
-            // Reset and play immediately for typing
+            if (!soundIsActive) return; // Only try to play if sound was unlocked
+            
+            // Play typing sound, if it fails, we keep going with the text
             typingAudio.currentTime = 0; 
-            typingAudio.play().catch(e => { /* fail silently on autoplay block */ });
+            typingAudio.play().catch(e => { 
+                soundIsActive = false; // Disable sound attempts if play fails
+                console.warn("Typing sound blocked, proceeding without sound.");
+            });
         }
 
         function playCheerSound() {
-            // Reset and play immediately for button click
+            if (!soundIsActive) return; // Only try to play if sound was unlocked
+            
+            // Play cheer sound
             cheerAudio.currentTime = 0;
-            cheerAudio.play().catch(e => { /* fail silently on play failure */ });
+            cheerAudio.play().catch(e => {
+                soundIsActive = false; // Disable sound attempts if play fails
+                console.warn("Cheer sound blocked, proceeding without sound.");
+            });
         }
 
         function typeWriter() {
             if (index < fullMessage.length) {
-                // Play sound for every character
-                playTypingSound();
+                // IMPORTANT: Play sound is now optional and will not block the animation
+                playTypingSound(); 
 
                 messageContainer.textContent += fullMessage.charAt(index);
                 index++;
@@ -203,35 +214,48 @@
         function startExperience() {
             if (animationStarted) return; 
             
-            // 1. ***STRONGEST AUDIO UNLOCK METHOD***
-            // Play and immediately pause both audio elements to force the browser to unlock them.
+            animationStarted = true;
+
+            // 1. Attempt to unlock sound (non-blocking)
             try {
-                typingAudio.play();
-                typingAudio.pause();
-                typingAudio.currentTime = 0;
-                cheerAudio.play();
-                cheerAudio.pause();
-                cheerAudio.currentTime = 0;
+                // Play and immediately pause the audio to unlock the browser
+                typingAudio.play().then(() => {
+                    typingAudio.pause();
+                    typingAudio.currentTime = 0;
+                    soundIsActive = true; // Set flag to allow sound attempts later
+                }).catch(() => {
+                    // If even the play attempt fails, sound is blocked
+                    soundIsActive = false;
+                    console.warn("Sound unlock failed, proceeding silently.");
+                });
+
+                // Do the same for the cheer sound
+                cheerAudio.play().then(() => {
+                    cheerAudio.pause();
+                    cheerAudio.currentTime = 0;
+                }).catch(() => {});
+
             } catch (e) {
-                console.log("Audio unlock attempted but may have been blocked.");
+                // Catch sync errors
+                soundIsActive = false;
+                console.error("Critical error during audio unlock, proceeding silently.");
             }
 
-            // 2. Hide the overlay
+            // 2. Hide the overlay (This is the critical unblock)
             overlay.style.opacity = '0';
             setTimeout(() => { overlay.style.display = 'none'; }, 500);
             
-            // 3. Start the main animation
-            animationStarted = true;
+            // 3. Start the main animation IMMEDIATELY after hiding overlay
+            // THIS WILL NOT BE BLOCKED BY THE SOUND ATTEMPT
             typeWriter();
         }
 
         function respond(choice) {
-            playCheerSound();
+            playCheerSound(); // Try to play sound (will only work if unlocked)
 
             const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
             const modal = document.getElementById(modalId);
             
-            // Ensure the modal pops up immediately
             modal.classList.add('active');
             
             document.getElementById('yes-btn').disabled = true;
