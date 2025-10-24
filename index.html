@@ -77,8 +77,7 @@ body {
 }
 .overlay-text {
     color: #a5b4fc; font-size: 1.5rem; font-weight: 700;
-    animation: pulse-overlay 2s infinite;
-    text-align: center;
+    animation: pulse-overlay 2s infinite; text-align: center;
 }
 @keyframes pulse-overlay {
     0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
@@ -87,8 +86,9 @@ body {
 </head>
 <body>
 
+<!-- Updated Beautiful Overlay Text -->
 <div id="start-overlay" onclick="startExperience()">
-    <p class="overlay-text">Just tap anywhere and let the melody begin… 🎵✨</p>
+    <p class="overlay-text">Tap gently and let the story of us begin… ✨💌</p>
 </div>
 
 <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
@@ -167,9 +167,11 @@ let cheerBuffer;
 
 async function initAudio() {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Typing sound
     const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3');
     const typingData = await typingRes.arrayBuffer();
     typingBuffer = await audioContext.decodeAudioData(typingData);
+    // Cheer sound
     const cheerRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
     const cheerData = await cheerRes.arrayBuffer();
     cheerBuffer = await audioContext.decodeAudioData(cheerData);
@@ -205,10 +207,16 @@ function typeWriter() {
 async function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
+
+    // Unlock audio
     await initAudio();
     await audioContext.resume();
+
+    // Hide overlay
     overlay.style.opacity = '0';
     setTimeout(() => overlay.style.display = 'none', 500);
+
+    // Start typing
     typeWriter();
 }
 
