@@ -1,242 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Special Invitation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1f2937 0%, #0c0a09 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            color: #f3f4f6;
-            position: relative; /* Needed for the overlay */
-        }
-        .main-card {
-            max-width: 500px;
-            width: 100%;
-            overflow-y: auto; 
-            max-height: 95vh;
-        }
-        .text-glow {
-            text-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
-        }
-        /* Pulse Animation for Location Dots */
-        .location-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
-        }
-        /* Typing Cursor Blink Effect */
-        .typing-cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1.2em;
-            background-color: white;
-            animation: blink 0.8s step-end infinite;
-            margin-left: 2px;
-            vertical-align: middle;
-        }
-        @keyframes blink {
-            from, to { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        /* Modal and Overlay Styling */
-        .modal-backdrop {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8); display: none;
-            align-items: center; justify-content: center; z-index: 50;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-card {
-            transform: translateY(-50px); opacity: 0;
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-        }
-        .modal-backdrop.active { display: flex; opacity: 1; }
-        .modal-backdrop.active .modal-card { transform: translateY(0); opacity: 1; }
-        .sunset-gradient {
-            background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
-            color: #1f2937;
-        }
-        .dark-gradient {
-            background: linear-gradient(135deg, #1a202c 0%, #3a0076 100%);
-        }
-        #start-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(12, 10, 9, 0.95);
-            display: flex; align-items: center; justify-content: center; z-index: 100;
-            cursor: pointer; transition: opacity 0.5s ease;
-        }
-        .overlay-text {
-            color: #a5b4fc; font-size: 1.5rem; font-weight: 700;
-            animation: pulse-overlay 2s infinite;
-        }
-        @keyframes pulse-overlay {
-            0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Special Invitation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1f2937 0%, #0c0a09 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      color: #f3f4f6;
+      position: relative;
+    }
+    .main-card {
+      max-width: 500px;
+      width: 100%;
+      overflow-y: auto;
+      max-height: 95vh;
+    }
+    .text-glow {
+      text-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
+    }
+    .location-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.2em;
+      background-color: white;
+      animation: blink 0.8s step-end infinite;
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      from, to { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .modal-card {
+      transform: translateY(-50px);
+      opacity: 0;
+      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    }
+    .modal-backdrop.active { display: flex; opacity: 1; }
+    .modal-backdrop.active .modal-card { transform: translateY(0); opacity: 1; }
+    .sunset-gradient {
+      background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
+      color: #1f2937;
+    }
+    .dark-gradient {
+      background: linear-gradient(135deg, #1a202c 0%, #3a0076 100%);
+    }
+    #start-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(12, 10, 9, 0.95);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+    .overlay-text {
+      color: #a5b4fc;
+      font-size: 1.5rem;
+      font-weight: 700;
+      animation: pulse-overlay 2s infinite;
+    }
+    @keyframes pulse-overlay {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
 </head>
 <body>
+  <div id="start-overlay" onclick="startExperience()">
+    <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
+  </div>
 
-    <div id="start-overlay" onclick="startExperience()">
-        <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
+  <!-- ✅ Updated Sounds -->
+  <audio id="typingSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8d3e2a513.mp3?filename=water-drop-35775.mp3" preload="auto"></audio>
+  <audio id="cheerSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_5b5e6ef2f2.mp3?filename=success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
+  <audio id="sadSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c7c87f0c6c.mp3?filename=sad-trombone-471.mp3" preload="auto"></audio>
+
+  <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-extrabold text-indigo-400 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
+      <p class="text-sm text-gray-400 mt-1">Across oceans, the connection remains stronger. ❤️</p>
     </div>
 
-    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3" preload="auto"></audio>
-    <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3" preload="auto"></audio>
-
-    <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
-
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-extrabold text-indigo-400 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
-            <p class="text-sm text-gray-400 mt-1">Across oceans, the connection remains stronger. ❤️</p>
-        </div>
-
-        <div class="flex justify-between items-center mb-8 bg-gray-800 p-3 rounded-xl border border-gray-700">
-            <div class="flex items-center space-x-2">
-                <div class="location-dot bg-red-500" style="animation-delay: 0s;"></div>
-                <span class="font-semibold text-red-400">Arak, Iran</span>
-            </div>
-            <div class="text-xl text-indigo-500 font-bold px-2">&harr;</div>
-            <div class="flex items-center space-x-2">
-                <span class="font-semibold text-green-400">Gurugram, India</span>
-                <div class="location-dot bg-green-500" style="animation-delay: 1s;"></div>
-            </div>
-        </div>
-
-        <div class="min-h-[180px] bg-gray-800/60 p-4 rounded-xl shadow-inner mb-8 border border-indigo-600/30">
-            <p id="message-container" class="text-base sm:text-lg text-gray-200 leading-relaxed"></p>
-        </div>
-
-        <div id="buttons-container" class="space-y-4 transition-opacity duration-500 opacity-0" aria-hidden="true">
-            <p class="text-center text-gray-300 italic">Will you make time for a date? 💖</p>
-            <div class="flex space-x-4">
-                <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-green-600 hover:bg-green-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-green-900/50 transform hover:scale-[1.02]">
-                    Yes, I'd love to! 🥰
-                </button>
-                <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transform hover:scale-[1.02]">
-                    Not today 🥺
-                </button>
-            </div>
-        </div>
-
+    <div class="flex justify-between items-center mb-8 bg-gray-800 p-3 rounded-xl border border-gray-700">
+      <div class="flex items-center space-x-2">
+        <div class="location-dot bg-red-500"></div>
+        <span class="font-semibold text-red-400">Arak, Iran</span>
+      </div>
+      <div class="text-xl text-indigo-500 font-bold px-2">&harr;</div>
+      <div class="flex items-center space-x-2">
+        <span class="font-semibold text-green-400">Gurugram, India</span>
+        <div class="location-dot bg-green-500"></div>
+      </div>
     </div>
 
-    <div id="modal-yes" class="modal-backdrop">
-        <div class="modal-card sunset-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-white">
-            <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-            <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
-            <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
-            <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition shadow-md">
-                Close & Message You! 💌
-            </button>
-        </div>
+    <div class="min-h-[180px] bg-gray-800/60 p-4 rounded-xl shadow-inner mb-8 border border-indigo-600/30">
+      <p id="message-container" class="text-base sm:text-lg text-gray-200 leading-relaxed"></p>
     </div>
 
-    <div id="modal-no" class="modal-backdrop">
-        <div class="modal-card dark-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-gray-400">
-            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
-            <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
-            <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition">
-                Close
-            </button>
-        </div>
+    <div id="buttons-container" class="space-y-4 transition-opacity duration-500 opacity-0" aria-hidden="true">
+      <p class="text-center text-gray-300 italic">Will you make time for a date? 💖</p>
+      <div class="flex space-x-4">
+        <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-green-600 hover:bg-green-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-green-900/50 transform hover:scale-[1.02]">
+          Yes, I'd love to! 🥰
+        </button>
+        <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transform hover:scale-[1.02]">
+          Not today 🥺
+        </button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const fullMessage = "Hey pyariii 🥰, I know there are thousands of kilometers between Gurugram 🇮🇳 and Arak 🇮🇷, but our connection is stronger than any distance. I'm excited to ask you for a virtual date. Please free yourself for a while if possible, but definitely don't miss your important stuff. I will happily make time in my busy schedule. I know I've been a little distant in making this bond beautiful, but let me try to be more open and realistic with you. So, it's up to you to decide what we'll do on our date—leaving that entirely on you. And yes, one more thing: I want the memories from this little time we share to be ours, before sharing them with anyone else. What do you say? 🥺👉👈";
-        
-        const messageContainer = document.getElementById('message-container');
-        const buttonsContainer = document.getElementById('buttons-container');
-        const overlay = document.getElementById('start-overlay');
-        const typingAudio = document.getElementById('typingSound');
-        const cheerAudio = document.getElementById('cheerSound');
-        let index = 0;
-        let animationStarted = false;
+  <!-- YES Modal -->
+  <div id="modal-yes" class="modal-backdrop">
+    <div class="modal-card sunset-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-white">
+      <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+      <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
+      <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
+      <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition shadow-md">
+        Close & Message You! 💌
+      </button>
+    </div>
+  </div>
 
-        function playTypingSound() {
-            typingAudio.currentTime = 0; 
-            typingAudio.play().catch(e => { /* fail silently */ });
+  <!-- NO Modal -->
+  <div id="modal-no" class="modal-backdrop">
+    <div class="modal-card dark-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-gray-400">
+      <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
+      <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
+      <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const fullMessage = "Hey pyariii 🥰, I know there are thousands of kilometers between Gurugram 🇮🇳 and Arak 🇮🇷, but our connection is stronger than any distance. I'm excited to ask you for a virtual date. Please free yourself for a while if possible, but definitely don't miss your important stuff. I will happily make time in my busy schedule. I know I've been a little distant in making this bond beautiful, but let me try to be more open and realistic with you. So, it's up to you to decide what we'll do on our date—leaving that entirely on you. And yes, one more thing: I want the memories from this little time we share to be ours, before sharing them with anyone else. What do you say? 🥺👉👈";
+
+    const messageContainer = document.getElementById('message-container');
+    const buttonsContainer = document.getElementById('buttons-container');
+    const overlay = document.getElementById('start-overlay');
+    const typingAudio = document.getElementById('typingSound');
+    const cheerAudio = document.getElementById('cheerSound');
+    const sadAudio = document.getElementById('sadSound');
+    let index = 0;
+    let animationStarted = false;
+
+    function playTypingSound() {
+      typingAudio.currentTime = 0;
+      typingAudio.play().catch(() => {});
+    }
+    function playCheerSound() {
+      cheerAudio.currentTime = 0;
+      cheerAudio.play().catch(() => {});
+    }
+    function playSadSound() {
+      sadAudio.currentTime = 0;
+      sadAudio.play().catch(() => {});
+    }
+
+    function typeWriter() {
+      if (index < fullMessage.length) {
+        playTypingSound();
+        messageContainer.textContent += fullMessage.charAt(index);
+        index++;
+        if (index < fullMessage.length) {
+          messageContainer.innerHTML += '<span class="typing-cursor"></span>';
         }
+        setTimeout(() => {
+          const cursor = messageContainer.querySelector('.typing-cursor');
+          if (cursor) cursor.remove();
+          typeWriter();
+        }, 40);
+      } else {
+        buttonsContainer.style.opacity = '1';
+        buttonsContainer.setAttribute('aria-hidden', 'false');
+      }
+    }
 
-        function playCheerSound() {
-            cheerAudio.currentTime = 0;
-            cheerAudio.play().catch(e => { /* fail silently */ });
-        }
+    function startExperience() {
+      if (animationStarted) return;
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display = 'none'; }, 500);
 
-        function typeWriter() {
-            if (index < fullMessage.length) {
-                playTypingSound();
+      // Unlock all sounds
+      [typingAudio, cheerAudio, sadAudio].forEach(a => {
+        try {
+          a.play(); a.pause(); a.currentTime = 0;
+        } catch {}
+      });
 
-                messageContainer.textContent += fullMessage.charAt(index);
-                index++;
-                if (index < fullMessage.length) {
-                    messageContainer.innerHTML += '<span class="typing-cursor"></span>';
-                }
-                setTimeout(() => {
-                    const cursor = messageContainer.querySelector('.typing-cursor');
-                    if (cursor) cursor.remove();
-                    typeWriter();
-                }, 40);
-            } else {
-                buttonsContainer.style.opacity = '1';
-                buttonsContainer.setAttribute('aria-hidden', 'false');
-            }
-        }
+      animationStarted = true;
+      typeWriter();
+    }
 
-        function startExperience() {
-            if (animationStarted) return; 
-            
-            // 1. Hide the overlay
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-            
-            // 2. ***STRONGEST AUDIO UNLOCK METHOD***
-            // Play and immediately pause both audio elements to force the browser to unlock them.
-            try {
-                typingAudio.play();
-                typingAudio.pause();
-                typingAudio.currentTime = 0;
-                cheerAudio.play();
-                cheerAudio.pause();
-                cheerAudio.currentTime = 0;
-            } catch (e) {
-                console.log("Audio unlock attempted but may have been blocked.");
-            }
+    function respond(choice) {
+      if (choice === 'Yes') {
+        playCheerSound();
+        document.getElementById('modal-yes').classList.add('active');
+      } else {
+        playSadSound();
+        document.getElementById('modal-no').classList.add('active');
+      }
 
-            // 3. Start the main animation
-            animationStarted = true;
-            typeWriter();
-        }
+      document.getElementById('yes-btn').disabled = true;
+      document.getElementById('no-btn').disabled = true;
+    }
 
-        function respond(choice) {
-            playCheerSound();
-
-            const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
-            const modal = document.getElementById(modalId);
-            modal.classList.add('active');
-            
-            document.getElementById('yes-btn').disabled = true;
-            document.getElementById('no-btn').disabled = true;
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            document.getElementById('yes-btn').disabled = false;
-            document.getElementById('no-btn').disabled = false;
-        }
-    </script>
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+      document.getElementById('yes-btn').disabled = false;
+      document.getElementById('no-btn').disabled = false;
+    }
+  </script>
 </body>
 </html>
