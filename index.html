@@ -86,12 +86,9 @@ body {
 </head>
 <body>
 
-<div id="start-overlay">
+<div id="start-overlay" onclick="startExperience()">
     <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
 </div>
-
-<audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3" preload="auto"></audio>
-<audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3" preload="auto"></audio>
 
 <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
 
@@ -102,13 +99,13 @@ body {
 
     <div class="flex justify-between items-center mb-8 bg-gray-800 p-3 rounded-xl border border-gray-700">
         <div class="flex items-center space-x-2">
-            <div class="location-dot bg-red-500"></div>
+            <div class="location-dot bg-red-500" style="animation-delay: 0s;"></div>
             <span class="font-semibold text-red-400">Arak, Iran</span>
         </div>
         <div class="text-xl text-indigo-500 font-bold px-2">&harr;</div>
         <div class="flex items-center space-x-2">
             <span class="font-semibold text-green-400">Gurugram, India</span>
-            <div class="location-dot bg-green-500"></div>
+            <div class="location-dot bg-green-500" style="animation-delay: 1s;"></div>
         </div>
     </div>
 
@@ -132,7 +129,7 @@ body {
 
 <div id="modal-yes" class="modal-backdrop">
     <div class="modal-card sunset-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-white">
-        <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
         <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
         <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
         <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition shadow-md">
@@ -143,7 +140,7 @@ body {
 
 <div id="modal-no" class="modal-backdrop">
     <div class="modal-card dark-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-gray-400">
-        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
         <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
         <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition">
@@ -158,24 +155,38 @@ const fullMessage = "Hey pyariii 🥰, I know there are thousands of kilometers 
 const messageContainer = document.getElementById('message-container');
 const buttonsContainer = document.getElementById('buttons-container');
 const overlay = document.getElementById('start-overlay');
-const typingAudio = document.getElementById('typingSound');
-const cheerAudio = document.getElementById('cheerSound');
+const yesBtn = document.getElementById('yes-btn');
+const noBtn = document.getElementById('no-btn');
+
 let index = 0;
 let animationStarted = false;
+let audioContext;
+let typingBuffer;
+let cheerBuffer;
 
-function playTypingSound() {
-    typingAudio.currentTime = 0; 
-    typingAudio.play().catch(e => { /* fail silently */ });
+async function initAudio() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Typing sound
+    const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3');
+    const typingData = await typingRes.arrayBuffer();
+    typingBuffer = await audioContext.decodeAudioData(typingData);
+    // Cheer sound
+    const cheerRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
+    const cheerData = await cheerRes.arrayBuffer();
+    cheerBuffer = await audioContext.decodeAudioData(cheerData);
 }
 
-function playCheerSound() {
-    cheerAudio.currentTime = 0;
-    cheerAudio.play().catch(e => { /* fail silently */ });
+function playSound(buffer) {
+    if (!audioContext || !buffer) return;
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start(0);
 }
 
 function typeWriter() {
     if (index < fullMessage.length) {
-        playTypingSound();
+        playSound(typingBuffer);
         messageContainer.textContent += fullMessage.charAt(index);
         index++;
         if (index < fullMessage.length) {
@@ -192,37 +203,36 @@ function typeWriter() {
     }
 }
 
-// ✅ New unified tap handler for iOS Chrome
-overlay.addEventListener('click', () => {
+async function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
 
+    // Unlock audio
+    await initAudio();
+    await audioContext.resume();
+
     // Hide overlay
     overlay.style.opacity = '0';
-    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+    setTimeout(() => overlay.style.display = 'none', 500);
 
-    // Unlock audio immediately (iOS requires a direct user gesture)
-    typingAudio.play().then(() => { typingAudio.pause(); typingAudio.currentTime = 0; }).catch(() => {});
-    cheerAudio.play().then(() => { cheerAudio.pause(); cheerAudio.currentTime = 0; }).catch(() => {});
-
-    // Start typing effect
+    // Start typing
     typeWriter();
-});
+}
 
 function respond(choice) {
-    playCheerSound();
+    playSound(cheerBuffer);
     const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
-    const modal = document.getElementById(modalId);
-    modal.classList.add('active');
-    document.getElementById('yes-btn').disabled = true;
-    document.getElementById('no-btn').disabled = true;
+    document.getElementById(modalId).classList.add('active');
+    yesBtn.disabled = true;
+    noBtn.disabled = true;
 }
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
-    document.getElementById('yes-btn').disabled = false;
-    document.getElementById('no-btn').disabled = false;
+    yesBtn.disabled = false;
+    noBtn.disabled = false;
 }
 </script>
+
 </body>
 </html>
