@@ -10,7 +10,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0c0a09, #1f2937);
+    background: linear-gradient(135deg, #1f2937 0%, #0c0a09 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -18,32 +18,43 @@ body {
     padding: 1rem;
     color: #f3f4f6;
     position: relative;
-    overflow-x: hidden;
 }
 
+/* Main card style */
 .main-card {
     max-width: 500px;
     width: 100%;
     overflow-y: auto;
     max-height: 95vh;
-    backdrop-filter: blur(12px);
 }
 
-.text-glow {
-    text-shadow: 0 0 12px rgba(129, 140, 248, 0.8);
+/* Water-drop style text boxes */
+.message-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 2rem 2rem 2rem 0.5rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-.location-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.7; }
+/* Bubble tail */
+.message-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    width: 0;
+    height: 0;
+    border: 15px solid transparent;
+    border-top-color: rgba(255,255,255,0.05);
+    border-bottom: 0;
+    margin-left: -7.5px;
+    margin-bottom: -15px;
 }
 
+/* Typing cursor */
 .typing-cursor {
     display: inline-block;
     width: 3px;
@@ -53,59 +64,44 @@ body {
     margin-left: 2px;
     vertical-align: middle;
 }
-@keyframes blink {
-    from, to { opacity: 1; }
-    50% { opacity: 0; }
-}
+@keyframes blink { from,to {opacity:1;} 50% {opacity:0;} }
 
-.modal-backdrop {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.85);
-    display: none;
-    align-items: center; justify-content: center; z-index: 50;
-    opacity: 0; transition: opacity 0.3s ease;
-}
-.modal-card {
-    transform: translateY(-50px); opacity: 0;
-    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-    border-radius: 1.5rem;
-    overflow: hidden;
-}
-.modal-backdrop.active { display: flex; opacity: 1; }
-.modal-backdrop.active .modal-card { transform: translateY(0); opacity: 1; }
-
-.water-drop {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 2rem 0 2rem 2rem;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1rem;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.water-drop:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
-}
-
+/* Overlay */
 #start-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(12, 10, 9, 0.95);
-    display: flex; align-items: center; justify-content: center; z-index: 100;
-    cursor: pointer; transition: opacity 0.5s ease;
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background-color: rgba(12,10,9,0.95);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; cursor: pointer; transition: opacity 0.5s ease;
 }
 .overlay-text {
-    color: #a5b4fc; font-size: 1.5rem; font-weight: 700;
+    color: #a5b4fc; font-size:1.5rem; font-weight:700;
     animation: pulse-overlay 2s infinite;
 }
-@keyframes pulse-overlay {
-    0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
-}
-button {
-    transition: all 0.3s ease;
+@keyframes pulse-overlay {0%,100%{opacity:1;}50%{opacity:0.7;}}
+
+/* Buttons hidden initially */
+#buttons-container {
+    transition: opacity 0.5s ease;
+    opacity: 0;
 }
 
+/* Modal */
+.modal-backdrop {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background-color: rgba(0,0,0,0.8); display:none;
+    align-items:center; justify-content:center; z-index:50;
+    opacity:0; transition: opacity 0.3s ease;
+}
+.modal-card {
+    transform: translateY(-50px); opacity:0;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+.modal-backdrop.active { display:flex; opacity:1; }
+.modal-backdrop.active .modal-card { transform:translateY(0); opacity:1; }
+.modal-sunset { 
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+    color:white;
+}
 </style>
 </head>
 <body>
@@ -114,36 +110,22 @@ button {
     <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
 </div>
 
-<div class="main-card bg-gray-900/60 rounded-3xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/40">
+<div class="main-card">
 
     <div class="text-center mb-6">
-        <h1 class="text-3xl font-extrabold text-indigo-400 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
-        <p class="text-sm text-gray-300 mt-1">Across oceans, the connection remains stronger. ❤️</p>
+        <h1 class="text-3xl font-extrabold text-indigo-400">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
+        <p class="text-sm text-gray-400 mt-1">Across oceans, the connection remains stronger. ❤️</p>
     </div>
 
-    <div class="flex justify-between items-center mb-8 bg-gray-800/70 p-3 rounded-xl border border-gray-700/50">
-        <div class="flex items-center space-x-2">
-            <div class="location-dot bg-red-500" style="animation-delay: 0s;"></div>
-            <span class="font-semibold text-red-400">Arak, Iran</span>
-        </div>
-        <div class="text-xl text-indigo-500 font-bold px-2">&harr;</div>
-        <div class="flex items-center space-x-2">
-            <span class="font-semibold text-green-400">Gurugram, India</span>
-            <div class="location-dot bg-green-500" style="animation-delay: 1s;"></div>
-        </div>
-    </div>
+    <div id="message-container" class="message-box text-base leading-relaxed"></div>
 
-    <div class="min-h-[220px] p-4">
-        <div id="message-container" class="text-gray-100 text-base sm:text-lg leading-relaxed"></div>
-    </div>
-
-    <div id="buttons-container" class="space-y-4 transition-opacity duration-500 opacity-0" aria-hidden="true">
-        <p class="text-center text-gray-300 italic">Will you make time for a date? 💖</p>
+    <div id="buttons-container" class="space-y-4 mt-4 text-center">
+        <p class="text-gray-300 italic">Will you make time for a date? 💖</p>
         <div class="flex space-x-4">
-            <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold rounded-xl shadow-lg transform hover:scale-[1.02]">
+            <button onclick="respond('Yes')" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl">
                 Yes, I'd love to! 🥰
             </button>
-            <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold rounded-xl shadow-lg transform hover:scale-[1.02]">
+            <button onclick="respond('No')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl">
                 Not today 🥺
             </button>
         </div>
@@ -152,107 +134,103 @@ button {
 </div>
 
 <div id="modal-yes" class="modal-backdrop">
-    <div class="modal-card max-w-sm">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Sunset" class="w-full h-48 object-cover">
-        <div class="p-6 bg-gradient-to-b from-yellow-400 via-orange-400 to-red-400 text-white">
-            <h2 class="text-3xl font-extrabold mb-3 text-center">YES! My Heart is Full! ❤️‍🔥</h2>
-            <p class="font-semibold text-center">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
-            <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-lg w-full">
-                Close & Message You! 💌
-            </button>
-        </div>
+    <div class="modal-card modal-sunset p-8 rounded-2xl shadow-2xl max-w-sm text-center">
+        <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
+        <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
+        <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg">
+            Close & Message You! 💌
+        </button>
     </div>
 </div>
 
 <div id="modal-no" class="modal-backdrop">
-    <div class="modal-card dark-gradient p-8 max-w-sm text-center border-4 border-gray-400">
-        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
-        <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
-        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition w-full">
+    <div class="modal-card p-8 rounded-2xl shadow-2xl max-w-sm text-center bg-gray-900 text-white">
+        <h2 class="text-2xl font-bold mb-3">It's Okay! 😔</h2>
+        <p>I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. 😊</p>
+        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg">
             Close
         </button>
     </div>
 </div>
 
 <script>
-const fullMessage = "Hey pyariii 🥰, I know there are thousands of kilometers between Gurugram 🇮🇳 and Arak 🇮🇷, but our connection is stronger than any distance. I'm excited to ask you for a virtual date. Please free yourself for a while if possible, but definitely don't miss your important stuff. I will happily make time in my busy schedule. I know I've been a little distant in making this bond beautiful, but let me try to be more open and realistic with you. So, it's up to you to decide what we'll do on our date—leaving that entirely on you. And yes, one more thing: I want the memories from this little time we share to be ours, before sharing them with anyone else. What do you say? 🥺👉👈";
+let fullMessage = "Hey pyariii 🥰, I know there are thousands of kilometers between Gurugram 🇮🇳 and Arak 🇮🇷, but our connection is stronger than any distance. I'm excited to ask you for a virtual date. Please free yourself for a while if possible, but definitely don't miss your important stuff. I will happily make time in my busy schedule. I know I've been a little distant in making this bond beautiful, but let me try to be more open and realistic with you. So, it's up to you to decide what we'll do on our date—leaving that entirely on you. And yes, one more thing: I want the memories from this little time we share to be ours, before sharing them with anyone else. What do you say? 🥺👉👈";
 
 const messageContainer = document.getElementById('message-container');
 const buttonsContainer = document.getElementById('buttons-container');
 const overlay = document.getElementById('start-overlay');
-const yesBtn = document.getElementById('yes-btn');
-const noBtn = document.getElementById('no-btn');
 
-let index = 0;
 let animationStarted = false;
+
+// AudioContext approach for iOS
 let audioContext;
-let typingBuffer;
-let cheerBuffer;
-
-async function initAudio() {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3');
-    const typingData = await typingRes.arrayBuffer();
-    typingBuffer = await audioContext.decodeAudioData(typingData);
-
-    const cheerRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
-    const cheerData = await cheerRes.arrayBuffer();
-    cheerBuffer = await audioContext.decodeAudioData(cheerData);
-}
+let typingBuffer, cheerBuffer;
 
 function playSound(buffer) {
-    if (!audioContext || !buffer) return;
+    if(!audioContext) return;
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(audioContext.destination);
-    source.start(0);
+    source.start();
 }
 
-function typeWriter() {
-    if (index < fullMessage.length) {
-        playSound(typingBuffer);
-        const char = fullMessage.charAt(index);
-        index++;
-        const drop = document.createElement('div');
-        drop.className = 'water-drop';
-        drop.textContent = char;
-        messageContainer.appendChild(drop);
+function startExperience() {
+    if(animationStarted) return;
+    animationStarted = true;
 
-        setTimeout(typeWriter, 30);
-    } else {
-        buttonsContainer.style.opacity = '1';
-        buttonsContainer.setAttribute('aria-hidden', 'false');
+    if(!audioContext){
+        audioContext = new (window.AudioContext||window.webkitAudioContext)();
+    }
+
+    audioContext.resume().then(() => {
+        // Hide overlay
+        overlay.style.opacity='0';
+        setTimeout(()=>overlay.style.display='none',500);
+
+        // Preload audio
+        loadAudio().then(()=>typeWriter());
+    });
+}
+
+async function loadAudio() {
+    if(!typingBuffer){
+        const res = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-60.mp3');
+        const data = await res.arrayBuffer();
+        typingBuffer = await audioContext.decodeAudioData(data);
+    }
+    if(!cheerBuffer){
+        const res = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
+        const data = await res.arrayBuffer();
+        cheerBuffer = await audioContext.decodeAudioData(data);
     }
 }
 
-async function startExperience() {
-    if (animationStarted) return;
-    animationStarted = true;
-
-    await initAudio();
-    await audioContext.resume();
-
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.style.display = 'none', 500);
-
-    typeWriter();
+let index=0;
+function typeWriter(){
+    if(index<fullMessage.length){
+        messageContainer.textContent += fullMessage.charAt(index);
+        playSound(typingBuffer);
+        index++;
+        messageContainer.innerHTML += '<span class="typing-cursor"></span>';
+        setTimeout(()=>{
+            const cursor = messageContainer.querySelector('.typing-cursor');
+            if(cursor) cursor.remove();
+            typeWriter();
+        },40);
+    } else {
+        buttonsContainer.style.opacity='1';
+    }
 }
 
-function respond(choice) {
+function respond(choice){
     playSound(cheerBuffer);
-    const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
+    const modalId = choice==='Yes'?'modal-yes':'modal-no';
     document.getElementById(modalId).classList.add('active');
-    yesBtn.disabled = true;
-    noBtn.disabled = true;
 }
 
-function closeModal(modalId) {
+function closeModal(modalId){
     document.getElementById(modalId).classList.remove('active');
-    yesBtn.disabled = false;
-    noBtn.disabled = false;
 }
 </script>
-
 </body>
 </html>
