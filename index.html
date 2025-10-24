@@ -72,10 +72,9 @@ body {
 
 /* YES Modal Specific Styles */
 .celebration-gradient {
-    /* Using sunset gradient but with a new name */
     background: linear-gradient(135deg, #f97316 0%, #facc15 100%); 
     color: #1f2937;
-    overflow: hidden; /* Contains confetti and graph */
+    overflow: hidden; 
 }
 
 /* Graph Animation Styles (Aesthetic Lines and Graphs) */
@@ -83,8 +82,8 @@ body {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     overflow: hidden;
-    z-index: 1; /* Below content */
-    opacity: 0.2; /* Subtle */
+    z-index: 1; 
+    opacity: 0.2; 
 }
 
 .graph-line {
@@ -288,49 +287,12 @@ const noBtn = document.getElementById('no-btn');
 
 let index = 0;
 let animationStarted = false;
-let audioContext;
-let typingBuffer;
-let cheerBuffer;
-let confettiInterval; // Added for confetti cleanup
+let confettiInterval; 
 
-async function initAudio() {
-    if (audioContext) return;
-    try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Fetch and decode audio files
-        const [typingRes, cheerRes] = await Promise.all([
-            fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3'),
-            fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3')
-        ]);
-
-        const [typingData, cheerData] = await Promise.all([
-            typingRes.arrayBuffer(),
-            cheerRes.arrayBuffer()
-        ]);
-
-        typingBuffer = await audioContext.decodeAudioData(typingData);
-        cheerBuffer = await audioContext.decodeAudioData(cheerData);
-    } catch (e) {
-        console.error("Audio failed to load:", e);
-        audioContext = null; 
-    }
-}
-
-function playSound(buffer) {
-    if (!audioContext || !buffer) return;
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start(0);
-}
-
+// Typewriter function modified to be SILENT
 function typeWriter() {
     if (index < fullMessage.length) {
-        playSound(typingBuffer);
+        // Removed playSound() call
         messageContainer.textContent += fullMessage.charAt(index);
         index++;
         if (index < fullMessage.length) {
@@ -347,16 +309,10 @@ function typeWriter() {
     }
 }
 
-// *** THIS IS THE CRITICAL FUNCTION THAT STARTS THE EXPERIENCE ***
-async function startExperience() {
+// Start function simplified to only hide overlay and start typing
+function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
-
-    // Initialize and unlock audio context 
-    await initAudio();
-    if (audioContext && audioContext.state === 'suspended') {
-        await audioContext.resume();
-    }
 
     // Hide overlay
     overlay.style.opacity = '0';
@@ -385,8 +341,9 @@ function createConfetti() {
     }
 }
 
+// Respond function modified to be SILENT
 function respond(choice) {
-    playSound(cheerBuffer);
+    // Removed playSound(cheerBuffer) call
     const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
     document.getElementById(modalId).classList.add('active');
     yesBtn.disabled = true;
