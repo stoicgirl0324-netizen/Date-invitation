@@ -9,8 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 body {
     font-family: 'Inter', sans-serif;
-    /* Richer, darker background */
-    background: linear-gradient(135deg, #0f172a 0%, #171717 100%); 
+    background: linear-gradient(135deg, #1f2937 0%, #0c0a09 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -18,18 +17,15 @@ body {
     padding: 1rem;
     color: #f3f4f6;
     position: relative;
-    overflow-x: hidden;
 }
 .main-card {
     max-width: 500px;
     width: 100%;
-    /* Keep scrollable for small screens */
-    overflow-y: auto; 
-    max-height: 95vh; 
+    overflow-y: auto;
+    max-height: 95vh;
 }
 .text-glow {
-    /* Slightly more defined glow */
-    text-shadow: 0 0 10px rgba(165, 180, 252, 0.8), 0 0 20px rgba(165, 180, 252, 0.4);
+    text-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
 }
 .location-dot {
     width: 12px;
@@ -54,163 +50,52 @@ body {
     from, to { opacity: 1; }
     50% { opacity: 0; }
 }
-
-/* --- Modal Styles --- */
 .modal-backdrop {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.9); display: none;
+    background-color: rgba(0, 0, 0, 0.8); display: none;
     align-items: center; justify-content: center; z-index: 50;
-    opacity: 0; transition: opacity 0.4s ease;
+    opacity: 0; transition: opacity 0.3s ease;
 }
 .modal-card {
     transform: translateY(-50px); opacity: 0;
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease-out;
-    position: relative;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
 }
 .modal-backdrop.active { display: flex; opacity: 1; }
 .modal-backdrop.active .modal-card { transform: translateY(0); opacity: 1; }
-
-/* YES Modal Specific Styles */
-.celebration-gradient {
+.sunset-gradient {
     background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
     color: #1f2937;
-    overflow: hidden; /* Contains confetti and graph */
 }
-
-/* Graph Animation Styles */
-.graph-container {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    overflow: hidden;
-    z-index: 1; /* Below content */
-    opacity: 0.2; /* Subtle */
-}
-
-.graph-line {
-    position: absolute;
-    width: 2px;
-    background-color: #ffffff;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    animation: flow 10s linear infinite;
-}
-
-.graph-dot {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #fca5a5;
-    box-shadow: 0 0 5px #fca5a5;
-    animation: move-dot 10s linear infinite;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-@keyframes flow {
-    0% { transform: translateY(100vh); opacity: 0; }
-    5% { opacity: 1; }
-    95% { opacity: 1; }
-    100% { transform: translateY(-100vh); opacity: 0; }
-}
-
-@keyframes move-dot {
-    0% { transform: translate(100vw, 100vh); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translate(-100vw, -100vh); opacity: 0; }
-}
-
-/* NO Modal Specific Styles */
 .dark-gradient {
     background: linear-gradient(135deg, #1a202c 0%, #3a0076 100%);
 }
-
-/* Start Overlay Styles */
 #start-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(12, 10, 9, 0.98);
+    background-color: rgba(12, 10, 9, 0.95);
     display: flex; align-items: center; justify-content: center; z-index: 100;
     cursor: pointer; transition: opacity 0.5s ease;
 }
 .overlay-text {
     color: #a5b4fc; font-size: 1.5rem; font-weight: 700;
     animation: pulse-overlay 2s infinite;
+    text-align: center;
 }
 @keyframes pulse-overlay {
     0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
 }
-
-/* Button Aesthetic */
-.btn-hover-3d {
-    transition: transform 0.2s, box-shadow 0.2s, background-position 0.2s;
-    background-size: 200% auto;
-    background-position: left center;
-}
-.btn-yes {
-    background-image: linear-gradient(to right, #10b981 0%, #059669 51%, #10b981 100%);
-}
-.btn-yes:hover {
-    background-position: right center; 
-    transform: scale(1.03) translateY(-2px);
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.5);
-}
-.btn-yes:active {
-    transform: scale(1);
-    box-shadow: 0 5px 10px rgba(16, 185, 129, 0.5);
-}
-
-.btn-no {
-    background-image: linear-gradient(to right, #ef4444 0%, #dc2626 51%, #ef4444 100%);
-}
-.btn-no:hover {
-    background-position: right center; 
-    transform: scale(1.03) translateY(-2px);
-    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.5);
-}
-.btn-no:active {
-    transform: scale(1);
-    box-shadow: 0 5px 10px rgba(239, 68, 68, 0.5);
-}
-
-/* Glassmorphism for Message Box */
-.glass-message-box {
-    background: rgba(30, 41, 59, 0.4); /* Darker, transparent background */
-    backdrop-filter: blur(8px); /* Blur effect */
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(129, 140, 248, 0.2); /* Subtle border */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Confetti effect for YES modal */
-.confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: #fff;
-  opacity: 0;
-  border-radius: 50%;
-  animation: confetti-fall 3s ease-in forwards;
-}
-
-@keyframes confetti-fall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
-
 </style>
 </head>
 <body>
 
 <div id="start-overlay" onclick="startExperience()">
-    <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
+    <p class="overlay-text">Just tap anywhere and let the melody begin… 🎵✨</p>
 </div>
 
-<div class="main-card bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-600/60">
+<div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
 
     <div class="text-center mb-6">
-        <h1 class="text-4xl font-black text-indigo-300 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
-        <p class="text-sm text-gray-400 mt-1 font-medium">Across oceans, the connection remains stronger. ❤️</p>
+        <h1 class="text-3xl font-extrabold text-indigo-400 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
+        <p class="text-sm text-gray-400 mt-1">Across oceans, the connection remains stronger. ❤️</p>
     </div>
 
     <div class="flex justify-between items-center mb-8 bg-gray-800 p-3 rounded-xl border border-gray-700">
@@ -218,26 +103,24 @@ body {
             <div class="location-dot bg-red-500" style="animation-delay: 0s;"></div>
             <span class="font-semibold text-red-400">Arak, Iran</span>
         </div>
-        <div class="text-2xl text-indigo-500 font-extrabold px-2">&harr;</div>
+        <div class="text-xl text-indigo-500 font-bold px-2">&harr;</div>
         <div class="flex items-center space-x-2">
             <span class="font-semibold text-green-400">Gurugram, India</span>
             <div class="location-dot bg-green-500" style="animation-delay: 1s;"></div>
         </div>
     </div>
 
-    <div class="min-h-[180px] glass-message-box p-4 rounded-xl shadow-inner mb-8 transition duration-500">
-        <p id="message-container" class="text-lg sm:text-xl text-gray-100 font-light leading-relaxed"></p>
+    <div class="min-h-[180px] bg-gray-800/60 p-4 rounded-xl shadow-inner mb-8 border border-indigo-600/30">
+        <p id="message-container" class="text-base sm:text-lg text-gray-200 leading-relaxed"></p>
     </div>
 
-    <div id="buttons-container" class="space-y-5 transition-opacity duration-500 opacity-0" aria-hidden="true">
-        <p class="text-center text-indigo-300 text-lg italic font-medium">Will you make time for a date? 💖</p>
+    <div id="buttons-container" class="space-y-4 transition-opacity duration-500 opacity-0" aria-hidden="true">
+        <p class="text-center text-gray-300 italic">Will you make time for a date? 💖</p>
         <div class="flex space-x-4">
-            <button id="yes-btn" onclick="respond('Yes')" 
-                    class="flex-1 py-4 text-white font-extrabold rounded-2xl shadow-xl shadow-green-900/50 btn-hover-3d btn-yes">
+            <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-green-600 hover:bg-green-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-green-900/50 transform hover:scale-[1.02]">
                 Yes, I'd love to! 🥰
             </button>
-            <button id="no-btn" onclick="respond('No')" 
-                    class="flex-1 py-4 text-white font-extrabold rounded-2xl shadow-xl shadow-red-900/50 btn-hover-3d btn-no">
+            <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transform hover:scale-[1.02]">
                 Not today 🥺
             </button>
         </div>
@@ -246,38 +129,22 @@ body {
 </div>
 
 <div id="modal-yes" class="modal-backdrop">
-    <div class="modal-card celebration-gradient p-8 rounded-3xl shadow-2xl max-w-sm text-center border-4 border-white z-20">
-        <div id="confetti-host" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;"></div>
-        
-        <div class="graph-container">
-            <div class="graph-line" style="height: 150%; top: -25%; left: 10%; transform: rotate(15deg); animation-duration: 8s;"></div>
-            <div class="graph-line" style="height: 120%; top: -10%; right: 5%; transform: rotate(-5deg); animation-duration: 12s; animation-delay: 2s;"></div>
-            <div class="graph-line" style="height: 200%; top: -50%; left: 40%; transform: rotate(-25deg); animation-duration: 15s; animation-delay: 4s;"></div>
-
-            <div class="graph-dot" style="top: 20%; left: 70%; animation-duration: 10s;"></div>
-            <div class="graph-dot" style="top: 80%; left: 30%; animation-duration: 14s; animation-delay: 3s;"></div>
-            <div class="graph-dot" style="top: 45%; left: 50%; animation-duration: 12s; animation-delay: 6s;"></div>
-        </div>
-
-        <div style="position: relative; z-index: 60;">
-            <svg class="w-20 h-20 text-red-700 mx-auto mb-4 animate-ping-slow" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-            <h2 class="text-4xl font-black mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
-            <p class="font-bold text-lg">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
-            <button onclick="closeModal('modal-yes')" class="mt-8 px-8 py-3 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition shadow-xl transform hover:scale-[1.05]">
-                Close & Message You! 💌
-            </button>
-        </div>
+    <div class="modal-card sunset-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-white">
+        <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
+        <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
+        <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition shadow-md">
+            Close & Message You! 💌
+        </button>
     </div>
 </div>
 
 <div id="modal-no" class="modal-backdrop">
     <div class="modal-card dark-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-gray-400">
         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <h2 class="text-3xl font-bold text-white mb-3">It's Okay! 😔</h2>
-        <p class="text-gray-300 text-lg">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
-        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition shadow-md">
+        <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
+        <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
+        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition">
             Close
         </button>
     </div>
@@ -297,39 +164,19 @@ let animationStarted = false;
 let audioContext;
 let typingBuffer;
 let cheerBuffer;
-let confettiInterval;
 
 async function initAudio() {
-    // Only attempt to initialize if not already done
-    if (audioContext) return;
-    try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Fetch and decode audio files
-        const [typingRes, cheerRes] = await Promise.all([
-            fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3'),
-            fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3')
-        ]);
-
-        const [typingData, cheerData] = await Promise.all([
-            typingRes.arrayBuffer(),
-            cheerRes.arrayBuffer()
-        ]);
-
-        typingBuffer = await audioContext.decodeAudioData(typingData);
-        cheerBuffer = await audioContext.decodeAudioData(cheerData);
-    } catch (e) {
-        console.error("Audio failed to load:", e);
-        audioContext = null; // Mark as failed
-    }
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3');
+    const typingData = await typingRes.arrayBuffer();
+    typingBuffer = await audioContext.decodeAudioData(typingData);
+    const cheerRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
+    const cheerData = await cheerRes.arrayBuffer();
+    cheerBuffer = await audioContext.decodeAudioData(cheerData);
 }
 
 function playSound(buffer) {
     if (!audioContext || !buffer) return;
-    // Check if audioContext is running, resume if suspended
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(audioContext.destination);
@@ -342,14 +189,13 @@ function typeWriter() {
         messageContainer.textContent += fullMessage.charAt(index);
         index++;
         if (index < fullMessage.length) {
-            // Re-insert cursor after content update
             messageContainer.innerHTML += '<span class="typing-cursor"></span>';
         }
         setTimeout(() => {
             const cursor = messageContainer.querySelector('.typing-cursor');
-            if (cursor) cursor.remove(); // Remove cursor before next char
+            if (cursor) cursor.remove();
             typeWriter();
-        }, 40); // Fast typing speed
+        }, 40);
     } else {
         buttonsContainer.style.opacity = '1';
         buttonsContainer.setAttribute('aria-hidden', 'false');
@@ -359,39 +205,11 @@ function typeWriter() {
 async function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
-
-    // Unlock audio
     await initAudio();
-    if (audioContext && audioContext.state === 'suspended') {
-        await audioContext.resume();
-    }
-
-    // Hide overlay
+    await audioContext.resume();
     overlay.style.opacity = '0';
     setTimeout(() => overlay.style.display = 'none', 500);
-
-    // Start typing
     typeWriter();
-}
-
-function createConfetti() {
-    const confettiHost = document.getElementById('confetti-host');
-    const colors = ['#facc15', '#f87171', '#a78bfa', '#ffffff'];
-
-    for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.width = `${5 + Math.random() * 8}px`;
-        confetti.style.height = confetti.style.width;
-        confetti.style.animationDuration = `${2 + Math.random() * 3}s`;
-        confetti.style.animationDelay = `${-Math.random() * 2}s`;
-        confettiHost.appendChild(confetti);
-
-        // Remove after animation to prevent memory leak
-        confetti.addEventListener('animationend', () => confetti.remove());
-    }
 }
 
 function respond(choice) {
@@ -400,39 +218,12 @@ function respond(choice) {
     document.getElementById(modalId).classList.add('active');
     yesBtn.disabled = true;
     noBtn.disabled = true;
-
-    // Start confetti and graph animation only for 'Yes'
-    if (choice === 'Yes') {
-        // Start a burst of confetti
-        createConfetti();
-        // Set an interval for continuous confetti (optional, but fun!)
-        confettiInterval = setInterval(createConfetti, 500); 
-
-        // Make the graph elements visible
-        document.querySelectorAll('.graph-line, .graph-dot').forEach(el => {
-            el.style.opacity = '1';
-        });
-    }
 }
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
     yesBtn.disabled = false;
     noBtn.disabled = false;
-
-    // Stop confetti for 'Yes' modal
-    if (modalId === 'modal-yes') {
-        clearInterval(confettiInterval);
-        // Clean up confetti elements
-        const confettiHost = document.getElementById('confetti-host');
-        while (confettiHost.firstChild) {
-            confettiHost.removeChild(confettiHost.firstChild);
-        }
-         // Hide the graph elements again
-        document.querySelectorAll('.graph-line, .graph-dot').forEach(el => {
-            el.style.opacity = '0';
-        });
-    }
 }
 </script>
 
