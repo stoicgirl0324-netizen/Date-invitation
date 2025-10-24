@@ -7,9 +7,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #1f2937 0%, #0c0a09 100%);
+    background: linear-gradient(135deg, #0c0a09, #1f2937);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -17,16 +18,21 @@ body {
     padding: 1rem;
     color: #f3f4f6;
     position: relative;
+    overflow-x: hidden;
 }
+
 .main-card {
     max-width: 500px;
     width: 100%;
     overflow-y: auto;
     max-height: 95vh;
+    backdrop-filter: blur(12px);
 }
+
 .text-glow {
-    text-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
+    text-shadow: 0 0 12px rgba(129, 140, 248, 0.8);
 }
+
 .location-dot {
     width: 12px;
     height: 12px;
@@ -37,6 +43,7 @@ body {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.3); opacity: 0.7; }
 }
+
 .typing-cursor {
     display: inline-block;
     width: 3px;
@@ -50,25 +57,38 @@ body {
     from, to { opacity: 1; }
     50% { opacity: 0; }
 }
+
 .modal-backdrop {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8); display: none;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: none;
     align-items: center; justify-content: center; z-index: 50;
     opacity: 0; transition: opacity 0.3s ease;
 }
 .modal-card {
     transform: translateY(-50px); opacity: 0;
     transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    border-radius: 1.5rem;
+    overflow: hidden;
 }
 .modal-backdrop.active { display: flex; opacity: 1; }
 .modal-backdrop.active .modal-card { transform: translateY(0); opacity: 1; }
-.sunset-gradient {
-    background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
-    color: #1f2937;
+
+.water-drop {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 2rem 0 2rem 2rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.dark-gradient {
-    background: linear-gradient(135deg, #1a202c 0%, #3a0076 100%);
+.water-drop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
 }
+
 #start-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background-color: rgba(12, 10, 9, 0.95);
@@ -82,6 +102,10 @@ body {
 @keyframes pulse-overlay {
     0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
 }
+button {
+    transition: all 0.3s ease;
+}
+
 </style>
 </head>
 <body>
@@ -90,14 +114,14 @@ body {
     <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
 </div>
 
-<div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
+<div class="main-card bg-gray-900/60 rounded-3xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/40">
 
     <div class="text-center mb-6">
         <h1 class="text-3xl font-extrabold text-indigo-400 text-glow">Arak 🇮🇷 ⇌ 🇮🇳 Gurugram</h1>
-        <p class="text-sm text-gray-400 mt-1">Across oceans, the connection remains stronger. ❤️</p>
+        <p class="text-sm text-gray-300 mt-1">Across oceans, the connection remains stronger. ❤️</p>
     </div>
 
-    <div class="flex justify-between items-center mb-8 bg-gray-800 p-3 rounded-xl border border-gray-700">
+    <div class="flex justify-between items-center mb-8 bg-gray-800/70 p-3 rounded-xl border border-gray-700/50">
         <div class="flex items-center space-x-2">
             <div class="location-dot bg-red-500" style="animation-delay: 0s;"></div>
             <span class="font-semibold text-red-400">Arak, Iran</span>
@@ -109,17 +133,17 @@ body {
         </div>
     </div>
 
-    <div class="min-h-[180px] bg-gray-800/60 p-4 rounded-xl shadow-inner mb-8 border border-indigo-600/30">
-        <p id="message-container" class="text-base sm:text-lg text-gray-200 leading-relaxed"></p>
+    <div class="min-h-[220px] p-4">
+        <div id="message-container" class="text-gray-100 text-base sm:text-lg leading-relaxed"></div>
     </div>
 
     <div id="buttons-container" class="space-y-4 transition-opacity duration-500 opacity-0" aria-hidden="true">
         <p class="text-center text-gray-300 italic">Will you make time for a date? 💖</p>
         <div class="flex space-x-4">
-            <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-green-600 hover:bg-green-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-green-900/50 transform hover:scale-[1.02]">
+            <button id="yes-btn" onclick="respond('Yes')" class="flex-1 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold rounded-xl shadow-lg transform hover:scale-[1.02]">
                 Yes, I'd love to! 🥰
             </button>
-            <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 transition duration-200 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transform hover:scale-[1.02]">
+            <button id="no-btn" onclick="respond('No')" class="flex-1 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold rounded-xl shadow-lg transform hover:scale-[1.02]">
                 Not today 🥺
             </button>
         </div>
@@ -128,22 +152,24 @@ body {
 </div>
 
 <div id="modal-yes" class="modal-backdrop">
-    <div class="modal-card sunset-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-white">
-        <svg class="w-16 h-16 text-white mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-        <h2 class="text-3xl font-extrabold mb-3">YES! My Heart is Full! ❤️‍🔥</h2>
-        <p class="font-semibold">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
-        <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition shadow-md">
-            Close & Message You! 💌
-        </button>
+    <div class="modal-card max-w-sm">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Sunset" class="w-full h-48 object-cover">
+        <div class="p-6 bg-gradient-to-b from-yellow-400 via-orange-400 to-red-400 text-white">
+            <h2 class="text-3xl font-extrabold mb-3 text-center">YES! My Heart is Full! ❤️‍🔥</h2>
+            <p class="font-semibold text-center">This is wonderful! We can start planning now. I'll message you right away with some ideas for our beautiful virtual date. ✨</p>
+            <button onclick="closeModal('modal-yes')" class="mt-6 px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-lg w-full">
+                Close & Message You! 💌
+            </button>
+        </div>
     </div>
 </div>
 
 <div id="modal-no" class="modal-backdrop">
-    <div class="modal-card dark-gradient p-8 rounded-2xl shadow-2xl max-w-sm text-center border-4 border-gray-400">
+    <div class="modal-card dark-gradient p-8 max-w-sm text-center border-4 border-gray-400">
         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <h2 class="text-2xl font-bold text-white mb-3">It's Okay! 😔</h2>
         <p class="text-gray-300">I completely understand. Just tell me when you're free and ready to make time. I'll be waiting patiently. No pressure at all. 😊</p>
-        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition">
+        <button onclick="closeModal('modal-no')" class="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition w-full">
             Close
         </button>
     </div>
@@ -166,11 +192,10 @@ let cheerBuffer;
 
 async function initAudio() {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    // Typing sound
     const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3');
     const typingData = await typingRes.arrayBuffer();
     typingBuffer = await audioContext.decodeAudioData(typingData);
-    // Cheer sound
+
     const cheerRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3');
     const cheerData = await cheerRes.arrayBuffer();
     cheerBuffer = await audioContext.decodeAudioData(cheerData);
@@ -187,16 +212,14 @@ function playSound(buffer) {
 function typeWriter() {
     if (index < fullMessage.length) {
         playSound(typingBuffer);
-        messageContainer.textContent += fullMessage.charAt(index);
+        const char = fullMessage.charAt(index);
         index++;
-        if (index < fullMessage.length) {
-            messageContainer.innerHTML += '<span class="typing-cursor"></span>';
-        }
-        setTimeout(() => {
-            const cursor = messageContainer.querySelector('.typing-cursor');
-            if (cursor) cursor.remove();
-            typeWriter();
-        }, 40);
+        const drop = document.createElement('div');
+        drop.className = 'water-drop';
+        drop.textContent = char;
+        messageContainer.appendChild(drop);
+
+        setTimeout(typeWriter, 30);
     } else {
         buttonsContainer.style.opacity = '1';
         buttonsContainer.setAttribute('aria-hidden', 'false');
@@ -207,15 +230,12 @@ async function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
 
-    // Unlock audio
     await initAudio();
     await audioContext.resume();
 
-    // Hide overlay
     overlay.style.opacity = '0';
     setTimeout(() => overlay.style.display = 'none', 500);
 
-    // Start typing
     typeWriter();
 }
 
