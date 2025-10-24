@@ -23,10 +23,12 @@ body {
 .main-card {
     max-width: 500px;
     width: 100%;
+    /* Keep scrollable for small screens */
     overflow-y: auto; 
     max-height: 95vh; 
 }
 .text-glow {
+    /* Slightly more defined glow */
     text-shadow: 0 0 10px rgba(165, 180, 252, 0.8), 0 0 20px rgba(165, 180, 252, 0.4);
 }
 .location-dot {
@@ -194,7 +196,7 @@ body {
 <body>
 
 <div id="start-overlay" onclick="startExperience()">
-    <p class="overlay-text">Tap gently to begin the story... (with soft tones) 🎧 ✨</p>
+    <p class="overlay-text">Tap gently and let the story of us begin… ✨💌</p>
 </div>
 
 <div class="main-card bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-600/60">
@@ -285,46 +287,12 @@ const noBtn = document.getElementById('no-btn');
 
 let index = 0;
 let animationStarted = false;
-let audioContext;
-let typingBuffer;
-let buttonBuffer; // New buffer for button sound
 let confettiInterval; 
 
-// --- AUDIO FUNCTIONS RE-INTEGRATED ---
-async function initAudio() {
-    if (audioContext) return;
-    try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Soft Key Typing sound
-        const typingRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-typewriter-key-1533.mp3'); 
-        const typingData = await typingRes.arrayBuffer();
-        typingBuffer = await audioContext.decodeAudioData(typingData);
-        
-        // Bell/Chime sound for button press
-        const buttonRes = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-positive-notification-951.mp3');
-        const buttonData = await buttonRes.arrayBuffer();
-        buttonBuffer = await audioContext.decodeAudioData(buttonData);
-    } catch (e) {
-        console.error("Audio failed to load:", e);
-        audioContext = null; 
-    }
-}
-
-function playSound(buffer) {
-    if (!audioContext || !buffer) return;
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start(0);
-}
-
+// Typewriter function modified to be SILENT
 function typeWriter() {
     if (index < fullMessage.length) {
-        playSound(typingBuffer); // Play sound on each character
+        // Removed playSound() call
         messageContainer.textContent += fullMessage.charAt(index);
         index++;
         if (index < fullMessage.length) {
@@ -341,15 +309,10 @@ function typeWriter() {
     }
 }
 
-async function startExperience() {
+// Start function simplified to only hide overlay and start typing
+function startExperience() {
     if (animationStarted) return;
     animationStarted = true;
-
-    // Initialize audio and resume on user interaction
-    await initAudio();
-    if (audioContext && audioContext.state === 'suspended') {
-        await audioContext.resume();
-    }
 
     // Hide overlay
     overlay.style.opacity = '0';
@@ -358,8 +321,6 @@ async function startExperience() {
     // Start typing
     typeWriter();
 }
-// --- END AUDIO FUNCTIONS ---
-
 
 function createConfetti() {
     const confettiHost = document.getElementById('confetti-host');
@@ -380,9 +341,9 @@ function createConfetti() {
     }
 }
 
+// Respond function modified to be SILENT
 function respond(choice) {
-    playSound(buttonBuffer); // Play button sound on press
-    
+    // Removed playSound(cheerBuffer) call
     const modalId = choice === 'Yes' ? 'modal-yes' : 'modal-no';
     document.getElementById(modalId).classList.add('active');
     yesBtn.disabled = true;
