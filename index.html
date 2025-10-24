@@ -113,8 +113,8 @@
         <p class="overlay-text">Tap anywhere to start with sound... 🎧</p>
     </div>
 
-    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-type-keyboard-257.mp3" preload="auto"></audio>
-    <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-small-group-cheer-and-applause-518.mp3" preload="auto"></audio>
+    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-keyboard-typing-60.mp3" preload="auto"></audio>
+    <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-church-bell-single-1559.mp3" preload="auto"></audio>
 
     <div class="main-card bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 text-white border border-indigo-700/50">
 
@@ -194,13 +194,14 @@
         function playTypingSound() {
             // Reset and play the sound quickly for a new character
             typingAudio.currentTime = 0; 
-            typingAudio.play().catch(e => console.log('Typing sound play failed.'));
+            // Play is wrapped in a try/catch for best browser compatibility
+            typingAudio.play().catch(e => { /* Silently fail if blocked */ });
         }
 
         function playCheerSound() {
             // Reset and play the sound
             cheerAudio.currentTime = 0;
-            cheerAudio.play().catch(e => console.log('Cheer sound play failed.'));
+            cheerAudio.play().catch(e => { /* Silently fail if blocked */ });
         }
 
         function typeWriter() {
@@ -232,7 +233,7 @@
             overlay.style.opacity = '0';
             setTimeout(() => { overlay.style.display = 'none'; }, 500);
             
-            // 2. IMPORTANT: Attempt to unlock the audio context on user interaction.
+            // 2. ***STRONGER AUDIO UNLOCK METHOD***
             try {
                 // Play and immediately pause both audio elements to "wake them up" for the browser.
                 typingAudio.play();
@@ -242,7 +243,7 @@
                 cheerAudio.pause();
                 cheerAudio.currentTime = 0;
             } catch (e) {
-                console.log("Audio unlock failed, sounds may not play until further interaction.");
+                // If this fails, the browser is really stubborn, but we proceed anyway.
             }
 
             // 3. Start the main animation
@@ -269,7 +270,6 @@
             document.getElementById('yes-btn').disabled = false;
             document.getElementById('no-btn').disabled = false;
         }
-
     </script>
 </body>
 </html>
